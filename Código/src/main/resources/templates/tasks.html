@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Tarefas</title>
+</head>
+<body>
+<h1>Lista de Tarefas</h1>
+
+<h2>Adicionar Tarefa</h2>
+<form action="#" th:action="@{/tasks}" th:object="${task}" method="post">
+    <p>
+        <label for="title">Título:</label>
+        <input type="text" id="title" name="title" th:value="*{title}" />
+    </p>
+    <p>
+        <label for="description">Descrição:</label>
+        <input type="text" id="description" name="description" th:value="*{description}" />
+    </p>
+    <p>
+        <label for="dueDate">Data de Vencimento:</label>
+        <input type="datetime-local" id="dueDate" name="dueDate" th:value="*{dueDate}" />
+    </p>
+    <p>
+        <label for="completed">Concluída:</label>
+        <input type="checkbox" id="completed" name="completed" th:checked="*{completed}" />
+    </p>
+    <p>
+        <button type="submit">Adicionar</button>
+    </p>
+</form>
+
+<h2>Tarefas</h2>
+<div>
+    <ul>
+        <li th:each="task : ${tasks}">
+            <span th:text="${task.title}">Título da Tarefa</span>
+            <!-- Adicione mais detalhes da tarefa aqui -->
+        </li>
+    </ul>
+</div>
+</body>
+</html>
