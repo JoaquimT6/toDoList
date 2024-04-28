@@ -101,7 +101,7 @@ function loadTasks() {
             taskList.innerHTML = '';
             tasks.forEach(task => {
                 const li = document.createElement('li');
-                li.textContent = `${task.title} - ${task.description} - Prioridade: ${task.priority} - Tipo: ${task.type} - Data de Vencimento: ${task.dueDate || 'N/A'}`;
+                li.textContent = `ID: ${task.id}, Título: ${task.title}, Descrição: ${task.description}, Prioridade: ${task.priority}, Tipo: ${task.type}, Data de Vencimento: ${task.dueDate || 'N/A'}`;
                 taskList.appendChild(li);
             });
         })
@@ -174,5 +174,6 @@ document.getElementById('deleteTaskForm').addEventListener('submit', event => {
 // Carregar tarefas ao carregar a página
 loadTasks();
 </script>
+
 </body>
 </html>
