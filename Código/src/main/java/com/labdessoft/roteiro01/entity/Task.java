@@ -1,34 +1,48 @@
 package com.labdessoft.roteiro01.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-@Entity // This tells Hibernate to make a table out of this class
+
+import java.time.LocalDate;
+
+@Entity
 public class Task {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Mudei para IDENTITY que é mais comum com o Auto Increment dos bancos de dados.
     private Long id;
 
     private String title;
     private String description;
-    private LocalDateTime dueDate;
+
+    @Enumerated(EnumType.STRING)
+    private TaskType type;
+
+    private LocalDate dueDate;  // Usado para tarefas do tipo DATA
+    private Integer dueInDays;  // Usado para tarefas do tipo PRAZO
     private boolean completed;
 
-    // Constructors
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    // Construtores
     public Task() {
     }
 
-    public Task(String title, String description, LocalDateTime dueDate, boolean completed) {
+    public Task(String title, String description, TaskType type, LocalDate dueDate, Integer dueInDays, Priority priority, boolean completed) {
         this.title = title;
         this.description = description;
+        this.type = type;
         this.dueDate = dueDate;
+        this.dueInDays = dueInDays;
+        this.priority = priority;
         this.completed = completed;
+        this.updateStatus();
     }
 
-    // Getters and setters
+    // Métodos getter e setter
     public Long getId() {
         return id;
     }
@@ -53,12 +67,28 @@ public class Task {
         this.description = description;
     }
 
-    public LocalDateTime getDueDate() {
+    public TaskType getType() {
+        return type;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
+    }
+
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public Integer getDueInDays() {
+        return dueInDays;
+    }
+
+    public void setDueInDays(Integer dueInDays) {
+        this.dueInDays = dueInDays;
     }
 
     public boolean isCompleted() {
@@ -67,5 +97,49 @@ public class Task {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+        updateStatus(); // Atualiza o status sempre que a conclusão é alterada
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    // O setStatus é intencionalmente privado para forçar o uso do método updateStatus
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void updateStatus() {
+        if (completed) {
+            status = Status.CONCLUIDA;
+        } else {
+            switch (type) {
+                case DATA:
+                case PRAZO:
+                    if (dueDate != null && LocalDate.now().isAfter(dueDate)) {
+                        status = Status.ATRASO;
+                    } else {
+                        status = Status.PREVISTA;
+                    }
+                    break;
+                case LIVRE:
+                    status = Status.PREVISTA;
+                    break;
+            }
+        }
     }
 }
+
+// Estes enums devem estar fora e acima da classe Task se você quiser que eles sejam acessíveis fora do arquivo Task.java.
+// Se os enums estão no mesmo arquivo que a classe Task, eles devem ser declarados como public ou default (sem modificador).
+
+
+

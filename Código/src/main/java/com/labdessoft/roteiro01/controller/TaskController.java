@@ -7,9 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
-@RequestMapping("/tasks") // Use o plural aqui, pois é uma convenção REST para coleções de recursos
+@RequestMapping("/tasks")
+@CrossOrigin(origins = "http://localhost:63342")
+
 public class TaskController {
 
     private final TaskService taskService;
@@ -19,19 +20,14 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    // Lista todas as tarefas
     @GetMapping
-    public List<Task> listAll() {
-        return taskService.findAllTasks();
+    public ResponseEntity<List<Task>> listAll() {
+        List<Task> tasks = taskService.findAllTasks();
+        return ResponseEntity.ok(tasks);
     }
 
-    @GetMapping("/")
-    public String listTasks(Model model) {
-        model.addAttribute("tasks", taskService.findAllTasks());
-        model.addAttribute("task", new Task()); // Adiciona um objeto Task vazio para ser usado no formulário
-        return "tasks";
-    }
-
-
+    // Obtem uma tarefa por ID
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTask(@PathVariable Long id) {
         return taskService.findTaskById(id)
@@ -39,11 +35,14 @@ public class TaskController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Cria uma nova tarefa
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Task createdTask = taskService.createTask(task);
+        return ResponseEntity.ok(createdTask);
     }
 
+    // Atualiza uma tarefa existente
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
         try {
@@ -54,13 +53,7 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/tasks")
-    public String addTask(Task task) {
-        taskService.createTask(task);
-        return "redirect:/";
-    }
-
-
+    // Deleta uma tarefa
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         try {

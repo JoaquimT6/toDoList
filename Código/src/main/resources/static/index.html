@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+</head>
+<body>
+
+<h1>Task Manager</h1>
+
+<div>
+  <h2>Tasks</h2>
+  <ul id="taskList"></ul>
+</div>
+
+<div>
+  <h2>Add Task</h2>
+  <form id="taskForm">
+    <input type="text" id="title" placeholder="Title" required>
+    <input type="text" id="description" placeholder="Description" required>
+    <!-- Add more fields as per your Task entity -->
+    <button type="submit">Add Task</button>
+  </form>
+</div>
+
+<script>
+// JavaScript to interact with the server
+
+const apiUrl = 'http://localhost:8080/tasks';
+
+// Function to list tasks
+function listTasks() {
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(tasks => {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = ''; // Clear existing tasks
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.textContent = `${task.title}: ${task.description}`;
+                taskList.appendChild(li);
+            });
+        });
+}
+
+// Handle form submission
+document.getElementById('taskForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    // Gather other fields similarly
+
+    const taskData = {
+        title: title,
+        description: description,
+        // Set other properties as per your Task entity
+    };
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taskData),
+    })
+    .then(response => response.json())
+    .then(addedTask => {
+        console.log('Task added:', addedTask);
+        listTasks(); // Refresh the list
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+// Initially list tasks
+listTasks();
+
+</script>
+</body>
+</html>
