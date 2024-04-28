@@ -3,79 +3,176 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Manager</title>
+  <title>To-Do List</title>
 </head>
 <body>
+<h1>To-Do List</h1>
 
-<h1>Task Manager</h1>
+<!-- Formulário para adicionar tarefa -->
+<h2>Adicionar Tarefa</h2>
+<form id="addTaskForm">
+  <label for="title">Título:</label>
+  <input type="text" id="title" name="title" required><br><br>
 
-<div>
-  <h2>Tasks</h2>
-  <ul id="taskList"></ul>
-</div>
+  <label for="description">Descrição:</label>
+  <textarea id="description" name="description" required></textarea><br><br>
 
-<div>
-  <h2>Add Task</h2>
-  <form id="taskForm">
-    <input type="text" id="title" placeholder="Title" required>
-    <input type="text" id="description" placeholder="Description" required>
-    <!-- Add more fields as per your Task entity -->
-    <button type="submit">Add Task</button>
-  </form>
-</div>
+  <label for="dueDate">Data de Vencimento:</label>
+  <input type="date" id="dueDate" name="dueDate"><br><br>
+
+  <label for="priority">Prioridade:</label>
+  <select id="priority" name="priority">
+    <option value="ALTA">Alta</option>
+    <option value="MEDIA">Média</option>
+    <option value="BAIXA">Baixa</option>
+  </select><br><br>
+
+  <label for="type">Tipo:</label>
+  <select id="type" name="type">
+    <option value="DATA">Data</option>
+    <option value="PRAZO">Prazo</option>
+    <option value="LIVRE">Livre</option>
+  </select><br><br>
+
+  <button type="submit">Adicionar Tarefa</button>
+</form>
+
+<hr>
+
+<!-- Formulário para atualizar tarefa -->
+<h2>Atualizar Tarefa</h2>
+<form id="updateTaskForm">
+  <label for="taskId">ID da Tarefa:</label>
+  <input type="text" id="taskId" name="taskId" required><br><br>
+
+  <label for="updatedTitle">Novo Título:</label>
+  <input type="text" id="updatedTitle" name="updatedTitle"><br><br>
+
+  <label for="updatedDescription">Nova Descrição:</label>
+  <textarea id="updatedDescription" name="updatedDescription"></textarea><br><br>
+
+  <label for="updatedDueDate">Nova Data de Vencimento:</label>
+  <input type="date" id="updatedDueDate" name="updatedDueDate"><br><br>
+
+  <label for="updatedPriority">Nova Prioridade:</label>
+  <select id="updatedPriority" name="updatedPriority">
+    <option value="ALTA">Alta</option>
+    <option value="MEDIA">Média</option>
+    <option value="BAIXA">Baixa</option>
+  </select><br><br>
+
+  <label for="updatedType">Novo Tipo:</label>
+  <select id="updatedType" name="updatedType">
+    <option value="DATA">Data</option>
+    <option value="PRAZO">Prazo</option>
+    <option value="LIVRE">Livre</option>
+  </select><br><br>
+
+  <button type="submit">Atualizar Tarefa</button>
+</form>
+
+<hr>
+
+<!-- Formulário para excluir tarefa -->
+<h2>Excluir Tarefa</h2>
+<form id="deleteTaskForm">
+  <label for="taskIdToDelete">ID da Tarefa a ser Excluída:</label>
+  <input type="text" id="taskIdToDelete" name="taskIdToDelete" required><br><br>
+
+  <button type="submit">Excluir Tarefa</button>
+</form>
+
+<hr>
+
+<!-- Lista de tarefas -->
+<h2>Lista de Tarefas</h2>
+<button onclick="loadTasks()">Atualizar Lista</button>
+<ul id="taskList"></ul>
 
 <script>
-// JavaScript to interact with the server
-
 const apiUrl = 'http://localhost:8080/tasks';
 
-// Function to list tasks
-function listTasks() {
+// Função para carregar a lista de tarefas
+function loadTasks() {
     fetch(apiUrl)
         .then(response => response.json())
         .then(tasks => {
             const taskList = document.getElementById('taskList');
-            taskList.innerHTML = ''; // Clear existing tasks
+            taskList.innerHTML = '';
             tasks.forEach(task => {
                 const li = document.createElement('li');
-                li.textContent = `${task.title}: ${task.description}`;
+                li.textContent = `${task.title} - ${task.description} - Prioridade: ${task.priority} - Tipo: ${task.type} - Data de Vencimento: ${task.dueDate || 'N/A'}`;
                 taskList.appendChild(li);
             });
-        });
+        })
+        .catch(error => console.error('Erro ao carregar as tarefas:', error));
 }
 
-// Handle form submission
-document.getElementById('taskForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const title = document.getElementById('title').value;
-    const description = document.getElementById('description').value;
-    // Gather other fields similarly
-
+// Adicionar tarefa
+document.getElementById('addTaskForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
     const taskData = {
-        title: title,
-        description: description,
-        // Set other properties as per your Task entity
+        title: formData.get('title'),
+        description: formData.get('description'),
+        dueDate: formData.get('dueDate') || null,
+        priority: formData.get('priority'),
+        type: formData.get('type')
     };
-
     fetch(apiUrl, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(taskData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(taskData)
     })
     .then(response => response.json())
-    .then(addedTask => {
-        console.log('Task added:', addedTask);
-        listTasks(); // Refresh the list
+    .then(() => {
+        loadTasks(); // Atualiza a lista após adicionar
+        event.target.reset(); // Limpa o formulário
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Erro ao adicionar tarefa:', error));
 });
 
-// Initially list tasks
-listTasks();
+// Atualizar tarefa
+document.getElementById('updateTaskForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const taskId = formData.get('taskId');
+    const updatedData = {
+        title: formData.get('updatedTitle'),
+        description: formData.get('updatedDescription'),
+        dueDate: formData.get('updatedDueDate') || null,
+        priority: formData.get('updatedPriority'),
+        type: formData.get('updatedType')
+    };
+    fetch(`${apiUrl}/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+    })
+    .then(response => response.json())
+    .then(() => {
+        loadTasks(); // Atualiza a lista após atualizar
+        event.target.reset(); // Limpa o formulário
+    })
+    .catch(error => console.error('Erro ao atualizar tarefa:', error));
+});
 
+// Excluir tarefa
+document.getElementById('deleteTaskForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const taskId = document.getElementById('taskIdToDelete').value;
+    fetch(`${apiUrl}/${taskId}`, {
+        method: 'DELETE'
+    })
+    .then(() => {
+        loadTasks(); // Atualiza a lista após deletar
+        document.getElementById('taskIdToDelete').value = ''; // Limpa o campo de input
+    })
+    .catch(error => console.error('Erro ao excluir tarefa:', error));
+});
+
+// Carregar tarefas ao carregar a página
+loadTasks();
 </script>
 </body>
 </html>

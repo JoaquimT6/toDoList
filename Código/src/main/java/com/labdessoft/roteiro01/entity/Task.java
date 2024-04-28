@@ -138,8 +138,4 @@ public class Task {
     }
 }
 
-// Estes enums devem estar fora e acima da classe Task se você quiser que eles sejam acessíveis fora do arquivo Task.java.
-// Se os enums estão no mesmo arquivo que a classe Task, eles devem ser declarados como public ou default (sem modificador).
-
-
 
