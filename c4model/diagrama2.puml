@@ -1,0 +1,12 @@
+@startuml C4_Container
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Usuário", "Uma pessoa que interage com o sistema ToDo List.")
+Container(webApp, "Aplicativo Web", "Java/Spring Boot", "Permite que os usuários gerenciem suas tarefas.")
+ContainerDb(database, "Banco de Dados", "H2", "Armazena informações das tarefas.")
+
+Rel(user, webApp, "Usa", "HTTP")
+Rel(webApp, database, "Lê e escreve")
+
+@enduml

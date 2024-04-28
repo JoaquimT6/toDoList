@@ -1,0 +1,15 @@
+@startuml C4_Component
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(webApp, "Aplicativo Web", "Java/Spring Boot") {
+    Component(controller, "TaskController", "Spring MVC Rest Controller", "Fornece endpoints API REST para gerenciamento de tarefas.")
+    Component(service, "TaskService", "Spring Component", "Contém lógica de negócios para gerenciamento de tarefas.")
+    Component(repository, "TaskRepository", "Spring Data", "Fornece acesso a dados do banco de dados.")
+}
+
+Rel(user, controller, "Usa", "HTTP")
+Rel(controller, service, "Chama")
+Rel(service, repository, "Usa")
+
+@enduml

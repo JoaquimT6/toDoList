@@ -1,0 +1,10 @@
+@startuml C4_Context
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "Usuário", "Uma pessoa que interage com o sistema ToDo List.")
+System(todolist, "Sistema ToDo List", "Permite que os usuários criem e gerenciem suas tarefas.")
+
+Rel(user, todolist, "Usa")
+
+@enduml
