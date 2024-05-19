@@ -1,4 +1,4 @@
-package com.labdessoft.roteiro01;
+package com.labdessoft.roteiro01.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
