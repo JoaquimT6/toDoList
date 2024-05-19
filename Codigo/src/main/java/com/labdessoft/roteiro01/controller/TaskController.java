@@ -7,60 +7,50 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@RestController
-@RequestMapping("/tasks")
-@CrossOrigin(origins = "http://localhost:63342")
 
+@RestController
+@RequestMapping("/api/tasks")
 public class TaskController {
 
-    private final TaskService taskService;
-
     @Autowired
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
+    private TaskService taskService;
+
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Task createdTask = taskService.createTask(task);
+        return ResponseEntity.status(201).body(createdTask);
     }
 
-    // Lista todas as tarefas
     @GetMapping
-    public ResponseEntity<List<Task>> listAll() {
+    public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.findAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
-    // Obtem uma tarefa por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTask(@PathVariable Long id) {
-        return taskService.findTaskById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Task task = taskService.findTaskById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        return ResponseEntity.ok(task);
     }
 
-    // Cria uma nova tarefa
-    @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.createTask(task);
-        return ResponseEntity.ok(createdTask);
-    }
-
-    // Atualiza uma tarefa existente
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
-        try {
-            Task updatedTask = taskService.updateTask(id, taskDetails);
-            return ResponseEntity.ok(updatedTask);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Task updatedTask = taskService.updateTask(id, taskDetails);
+        return ResponseEntity.ok(updatedTask);
     }
 
-    // Deleta uma tarefa
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        try {
-            taskService.deleteTask(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<Task> markTaskAsCompleted(@PathVariable Long id) {
+        Task task = taskService.findTaskById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        task.setCompleted(true);
+        Task updatedTask = taskService.updateTask(id, task);
+        return ResponseEntity.ok(updatedTask);
     }
 }
+
