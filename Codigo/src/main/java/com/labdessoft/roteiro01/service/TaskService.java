@@ -4,6 +4,8 @@ import com.labdessoft.roteiro01.entity.Status;
 import com.labdessoft.roteiro01.entity.Task;
 import com.labdessoft.roteiro01.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +24,10 @@ public class TaskService {
 
     public List<Task> findAllTasks() {
         return taskRepository.findAll();
+    }
+
+    public Page<Task> listAll(Pageable pageable) {
+        return taskRepository.findAll(pageable);
     }
 
     public Optional<Task> findTaskById(Long id) {
