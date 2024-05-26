@@ -1,0 +1,18 @@
+@startuml
+actor User
+participant "TaskController" as TC
+participant "TaskService" as TS
+participant "TaskRepository" as TR
+
+User -> TC: GET /api/tasks/{id}
+TC -> TS: findTaskById(id)
+TS -> TR: findById(id)
+TR --> TS: task or empty
+alt task found
+    TS --> TC: task
+    TC --> User: 200 OK (task)
+else task not found
+    TS --> TC: throws Exception
+    TC --> User: 404 Not Found
+end
+@enduml

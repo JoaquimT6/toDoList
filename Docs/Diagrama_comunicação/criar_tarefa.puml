@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant "TaskController" as TC
+participant "TaskService" as TS
+participant "TaskRepository" as TR
+
+User -> TC: POST /api/tasks
+TC -> TS: createTask(task)
+TS -> TR: save(task)
+TR --> TS: task saved
+TS --> TC: createdTask
+TC --> User: 201 Created (createdTask)
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+actor User
+participant "TaskController" as TC
+participant "TaskService" as TS
+participant "TaskRepository" as TR
+
+User -> TC: PUT /api/tasks/{id}
+TC -> TS: updateTask(id, taskDetails)
+TS -> TR: findById(id)
+TR --> TS: task or empty
+alt task found
+    TS -> TR: save(updated task)
+    TR --> TS: updated task
+    TS --> TC: updated task
+    TC --> User: 200 OK (updated task)
+else task not found
+    TS --> TC: throws Exception
+    TC --> User: 404 Not Found
+end
+@enduml
