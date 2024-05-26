@@ -48,6 +48,7 @@ public class TaskService {
         existingTask.setDescription(taskDetails.getDescription());
         existingTask.setDueDate(taskDetails.getDueDate());
         existingTask.setCompleted(taskDetails.isCompleted());
+        existingTask.setType(taskDetails.getType()); // Certifique-se de atualizar o tipo também
         validateTask(existingTask);
         updateStatus(existingTask);
         return taskRepository.save(existingTask);
@@ -67,11 +68,24 @@ public class TaskService {
         if (task.isCompleted()) {
             task.setStatus(Status.CONCLUIDA);
         } else {
-            if (task.getDueDate() != null && task.getDueDate().isBefore(LocalDate.now())) {
-                task.setStatus(Status.ATRASO);
-            } else {
-                task.setStatus(Status.PREVISTA);
+            switch (task.getType()) {
+                case DATA:
+                case PRAZO:
+                    if (task.getDueDate() != null && LocalDate.now().isAfter(task.getDueDate())) {
+                        task.setStatus(Status.ATRASO);
+                    } else {
+                        task.setStatus(Status.PREVISTA);
+                    }
+                    break;
+                case LIVRE:
+                    task.setStatus(Status.PREVISTA);
+                    break;
             }
         }
     }
+
+    public <T> Object findAllTasks(T any) {
+        return null;
+    }
 }
+

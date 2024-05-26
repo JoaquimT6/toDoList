@@ -1,14 +1,17 @@
 package com.labdessoft.roteiro01.entity;
 
-import jakarta.persistence.*;
-
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Mudei para IDENTITY que é mais comum com o Auto Increment dos bancos de dados.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -17,8 +20,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskType type;
 
-    private LocalDate dueDate;  // Usado para tarefas do tipo DATA
-    private Integer dueInDays;  // Usado para tarefas do tipo PRAZO
+    private LocalDate dueDate;
+    private Integer dueInDays;
     private boolean completed;
 
     @Enumerated(EnumType.STRING)
@@ -97,7 +100,7 @@ public class Task {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
-        updateStatus(); // Atualiza o status sempre que a conclusão é alterada
+        updateStatus();
     }
 
     public Priority getPriority() {
@@ -112,7 +115,6 @@ public class Task {
         return status;
     }
 
-    // O setStatus é intencionalmente privado para forçar o uso do método updateStatus
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -137,5 +139,6 @@ public class Task {
         }
     }
 }
+
 
 

@@ -23,18 +23,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TaskServiceTest {
 
     @Mock
-    TaskRepository tasksRepository;
+    private TaskRepository taskRepository;
 
     private TaskService taskService;
 
     @BeforeEach
     public void setup() {
-        taskService = new TaskService(tasksRepository);
+        taskService = new TaskService(taskRepository);
         Pageable pageable = PageRequest.of(0, 5, Sort.by(
                 Sort.Order.asc("title"),
                 Sort.Order.desc("id")));
 
-        Mockito.lenient().when(tasksRepository.findAll(pageable)).thenReturn(TaskMock.createTasks());
+        Mockito.lenient().when(taskRepository.findAll(pageable)).thenReturn(TaskMock.createTasks());
     }
 
     @Test
@@ -51,3 +51,4 @@ public class TaskServiceTest {
         assertNotNull(tasks);
     }
 }
+

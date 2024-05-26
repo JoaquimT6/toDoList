@@ -32,7 +32,6 @@ public class TaskTest {
     public void should_update_status_to_concluida_when_completed() {
         Task task = new Task("Task Title", "Task Description", TaskType.DATA, LocalDate.now().plusDays(5), null, Priority.ALTA, false);
         task.setCompleted(true);
-        task.updateStatus();
 
         assertEquals(Status.CONCLUIDA, task.getStatus());
     }
@@ -55,3 +54,4 @@ public class TaskTest {
         assertEquals(Status.PREVISTA, task.getStatus());
     }
 }
+

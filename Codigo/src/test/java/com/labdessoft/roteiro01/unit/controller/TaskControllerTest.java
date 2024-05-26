@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -55,9 +56,14 @@ public class TaskControllerTest {
     @Test
     @DisplayName("Should return all tasks")
     public void should_return_all_tasks() throws Exception {
+        Mockito.when(taskService.findAllTasks()).thenReturn(Collections.singletonList(
+                new Task("Task 1", "Description 1", TaskType.DATA, LocalDate.now().plusDays(5), null, Priority.ALTA, false)
+        ));
+
         mockMvc.perform(get("/api/tasks")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("Task 1"));
     }
 
     @Test
@@ -112,3 +118,4 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.status").value(Status.CONCLUIDA.toString()));
     }
 }
+
