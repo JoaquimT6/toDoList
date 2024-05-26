@@ -35,8 +35,8 @@ public class TaskService {
     }
 
     public Task createTask(Task task) {
-        validateTask(task); // Validação antes de criar uma tarefa
-        updateStatus(task); // Atualiza o status baseado no tipo e data
+        validateTask(task);
+        updateStatus(task);
         return taskRepository.save(task);
     }
 
@@ -48,8 +48,8 @@ public class TaskService {
         existingTask.setDescription(taskDetails.getDescription());
         existingTask.setDueDate(taskDetails.getDueDate());
         existingTask.setCompleted(taskDetails.isCompleted());
-        validateTask(existingTask); // Validação antes de atualizar
-        updateStatus(existingTask); // Atualiza o status conforme necessário
+        validateTask(existingTask);
+        updateStatus(existingTask);
         return taskRepository.save(existingTask);
     }
 
@@ -64,7 +64,6 @@ public class TaskService {
     }
 
     private void updateStatus(Task task) {
-        // Lógica para atualizar o status da tarefa, baseado em seu tipo e se está concluída
         if (task.isCompleted()) {
             task.setStatus(Status.CONCLUIDA);
         } else {

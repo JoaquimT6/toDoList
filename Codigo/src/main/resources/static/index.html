@@ -90,12 +90,17 @@
 <ul id="taskList"></ul>
 
 <script>
-const apiUrl = 'http://localhost:8080/tasks';
+const apiUrl = 'http://localhost:8080/api/tasks';
 
 // Função para carregar a lista de tarefas
 function loadTasks() {
     fetch(apiUrl)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(tasks => {
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
