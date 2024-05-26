@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant "TaskController" as TC
+participant "TaskService" as TS
+participant "TaskRepository" as TR
+
+User -> TC: DELETE /api/tasks/{id}
+TC -> TS: deleteTask(id)
+TS -> TR: deleteById(id)
+TR --> TS: void
+TS --> TC: void
+TC --> User: 204 No Content
+@enduml

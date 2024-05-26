@@ -1,0 +1,21 @@
+@startuml
+actor User
+participant "TaskController" as TC
+participant "TaskService" as TS
+participant "TaskRepository" as TR
+
+User -> TC: PATCH /api/tasks/{id}/complete
+TC -> TS: findTaskById(id)
+TS -> TR: findById(id)
+TR --> TS: task or empty
+alt task found
+    TS -> TS: task.setCompleted(true)
+    TS -> TR: save(task)
+    TR --> TS: updated task
+    TS --> TC: updated task
+    TC --> User: 200 OK (updated task)
+else task not found
+    TS --> TC: throws Exception
+    TC --> User: 404 Not Found
+end
+@enduml

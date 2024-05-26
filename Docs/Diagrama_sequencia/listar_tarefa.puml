@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant "TaskController" as TC
+participant "TaskService" as TS
+participant "TaskRepository" as TR
+
+User -> TC: GET /api/tasks
+TC -> TS: findAllTasks()
+TS -> TR: findAll()
+TR --> TS: list of tasks
+TS --> TC: list of tasks
+TC --> User: 200 OK (list of tasks)
+@enduml
