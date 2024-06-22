@@ -1,5 +1,6 @@
 package com.labdessoft.roteiro01.controller;
 
+import org-springframework-web.bind annotation.CrossOrigin;
 import com.labdessoft.roteiro01.entity.Task;
 import com.labdessoft.roteiro01.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
 @RequestMapping("/tasks")
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin(origins = "*")
+
 
 public class TaskController {
 
