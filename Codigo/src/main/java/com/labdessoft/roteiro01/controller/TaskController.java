@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 @RestController
 @RequestMapping("/tasks")
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin(origins = "*")
 
 
 public class TaskController {
