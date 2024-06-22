@@ -1,6 +1,6 @@
 package com.labdessoft.roteiro01.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
 import com.labdessoft.roteiro01.entity.Task;
 import com.labdessoft.roteiro01.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 @RestController
-
-@CrossOrigin(origins = "*")
+@RequestMapping("/tasks")
+@CrossOrigin(origins = "http://localhost:63342")
 
 
 public class TaskController {
@@ -23,7 +23,7 @@ public class TaskController {
     }
 
     // Lista todas as tarefas
-    @GetMapping("/tasks")
+    @GetMapping
     public ResponseEntity<List<Task>> listAll() {
         List<Task> tasks = taskService.findAllTasks();
         return ResponseEntity.ok(tasks);
