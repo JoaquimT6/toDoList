@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 @RestController
-@RequestMapping("/tasks")
+
 @CrossOrigin(origins = "*")
 
 
@@ -23,7 +23,7 @@ public class TaskController {
     }
 
     // Lista todas as tarefas
-    @GetMapping
+    @GetMapping("/tasks")
     public ResponseEntity<List<Task>> listAll() {
         List<Task> tasks = taskService.findAllTasks();
         return ResponseEntity.ok(tasks);
