@@ -1,0 +1,68 @@
+body {
+  background-color: #f0f0f0; /* Cor de fundo do corpo */
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.TodoWrapper {
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #ffffff; /* Cor de fundo do contêiner principal */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.TodoForm {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.TodoForm input, .TodoForm select {
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.TodoForm button {
+  padding: 10px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.TodoForm button:hover {
+  background-color: #4cae4c;
+}
+
+.TodoList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.Todo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.completed {
+  text-decoration: line-through;
+}
+
+.delete-icon {
+  cursor: pointer;
+  color: red;
+  align-self: flex-end;
+}
